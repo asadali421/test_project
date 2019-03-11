@@ -1,0 +1,55 @@
+<% obj.each do |project| %>
+
+<div class="row">
+
+<div class="col-xs-8 col-xs-offset-2">
+
+<div class="well well-lg">
+
+<div class="project-title">
+
+<%= link_to project.title, project_path(project) %>
+
+</div>
+<% project.users.each do |manager| %>
+	<% if manager.user_type =="Manager"%>
+<div class="project-body">
+
+<%= truncate(project.description, length: 100) %>
+	
+<div class="project-meta-data">
+<small>
+	Created By: <%=manager.name  %>,
+	<%= time_ago_in_words(project.created_at) %>
+	last updated: <%= time_ago_in_words(project.updated_at) %> ago
+	
+
+</small>
+</div>
+</div>
+<% if signed_in? && current_user == manager %>
+<div class="project-actions">
+
+<%= link_to "Add developer",  new_project_project_user_path(project.id), class: "btn btn-xs btn-success" %>
+<%= link_to "Edit this project", edit_project_path(project), class: "btn btn-xs btn-primary" %>
+
+<%= link_to "Delete this project", project_path(project), method: :delete,
+
+data: { confirm: "Are you sure you want to delete the article?"},
+
+class: "btn btn-xs btn-danger" %>
+<% elsif  signed_in? && current_user.user_type =="QA" %>
+<%= link_to "Add Bug", new_project_bug_path(project), class: "btn btn-xs btn-warning" %>
+
+
+</div>
+<% end %>
+<% end %>
+<% end %>
+</div>
+
+</div>
+
+</div>
+
+<% end %>

@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-xs-8 col-xs-offset-2">
+    <div class="well well-lg">
+      <div class="project-title">
+        <%= link_to @project.title, project_path(@project) %>
+          
+      </div>
+
+      <div class="project-body">
+
+        <%= truncate(@project.description, length: 100) %>
+        <br>
+        <br>
+     
+        <b> List of Developers</b>
+    
+        <ul>
+	         <% @project.users.each do |user| %>
+            <% if user.user_type =="Developer"%>
+              <li> <%=user.name%></li>
+            <% end%>
+          <%end%>
+        </ul>
+    
+      <%if @project.bugs.count>0 %>
+       <%= link_to 'View Bugs', project_bugs_path(@project.id),class: "btn btn-xs btn-primary"%>
+       <%end %>
+        <div class="project-meta-data">
+          <small>
+        	 <% @project.users.each do |user| %>
+        	   <% if user.user_type =="Manager"%>
+        	     Created By: <%=user.name  %>,
+        	     <%= time_ago_in_words(@project.created_at) %>
+        	     last updated: <%= time_ago_in_words(@project.updated_at) %> ago
+        	   <% end %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+        	
+           <div class="project-actions">
+            <% if signed_in? && current_user.user_type == "Manager" %>
+              <%= link_to "Add developer",  new_project_project_user_path(@project.id), class: "btn btn-xs btn-success" %>
+              <%= link_to "Edit this project", edit_project_path(@project), class: "btn btn-xs btn-primary" %>
+              <%= link_to "Delete this project", project_path(@project), method: :delete,
+                data: { confirm: "Are you sure you want to delete the article?"},
+                class: "btn btn-xs btn-danger" %>
+            <% elsif signed_in? &&  current_user.user_type == "QA"  %>
+              <%= link_to "Add Bug", new_project_bug_path(@project), class: "btn btn-xs btn-warning" %>
+            <% end %>
+          </div>
+       
+     </div>
+    </div>
+  </div>
