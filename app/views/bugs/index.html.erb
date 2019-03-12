@@ -1,69 +1,10 @@
-
-
 <% if @bugs.count>0%>
+	<div align="center">
+		<h1> List of Bugs</h1>
+	</div>
+<%= render "bugs/bug", bugs: @bugs%>
+<% else %>
 <div align="center">
-	<h1> <%= @bugs.last.project.title%> bugs</h1>
-</div>
-<% @bugs.each do |bug| %>
-
-<div class="row" >
-
-<div class="col-xs-8 col-xs-offset-2">
-
-<div class="well well-lg" align="center">
-
-
-
-  <% if  bug.image_path.url!=nil %>
-  <%= image_tag bug.image_path.url ,size: 100%>
-  <% end %>
-  <div class="project-title">
-
-<%= bug.title %>
-
-</div>
-
-<div class="project-body">
-	<%= truncate(bug.description, length: 100) %>
-</div>
-
- 		<div class="project-meta-data">
-          <small>
-        	     Created By: <%=User.find(bug.created_by).name  %>,
-        	     <%= time_ago_in_words(bug.created_at) %>
-        	     last updated: <%= time_ago_in_words(bug.updated_at) %> ago
-        	 
-          </small>
-        </div>
-
-<% if signed_in? && current_user.id == bug.created_by  %>
-<div class="project-actions">
-
-
-<%= link_to "Edit this Bug", edit_project_bug_path(bug.project_id,bug.id), class: "btn btn-xs btn-primary" %>
-
-<%= link_to "Delete this Bug", project_bug_path(bug.project_id,bug.id), method: :delete,
-
-data: { confirm: "Are you sure you want to delete the article?"},
-
-class: "btn btn-xs btn-danger" %>
-
-
-
-</div>
-
-<% end %>
-
-</div>
-
-</div>
-
-</div>
-
-<% end else %>
-<div align="center">
-	<h1> No Bug Found</h1>
+  <h1> No Bug Found</h1>
 </div>
 <% end %>
-
-

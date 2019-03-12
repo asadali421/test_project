@@ -1,92 +1,65 @@
 class ProjectsController < ApplicationController
-	
-	def new
-		authorize current_user
+	before_action :authenticate_user!
+  before_action :authorize_user!
+  before_action :set_project, only: [:destroy, :edit, :update]
+  def new
 		@project = Project.new
-		
-
 	end
 
 	def index
 		@projects = Project.all
-	end
+  end
 
-	def show
-		set_project
-  		@project_developer = ProjectUser.where(project_id: @project.id)
-	end
+  def show
+    @project = Project.find(params[:id])
+  end
 
-	def create
-		@project = Project.new(project_params)
-		@project_user = ProjectUser.new
-		@project_user.project = @project
-		@project_user.user = current_user
-		save_project
-	end
+  def create
+      @project = current_user.managed_projects.new(project_params)
+    if @project.save
+      flash[:success] = "project was successfuly created"
+      redirect_to root_path
+    else
+      flash[:danger] = "project was not created"
+      render 'new'
+    end	
+  end
 
-	def update
-		
-	end
+  def update
+    if @project.update(project_params)
+      flash[:success] = "project was successfuly update"
+      redirect_to root_path
+    else
+      flash[:danger] = "project was not created"
+      render 'new'
+    end 
+  end
 
-	def destroy
-		delete_project
-	end
+  def destroy
+    if @project.destroy       
+      flash[:success] = "project was successfuly deleted"
+      redirect_to projects_path()
+    end
+  end 
 
-	def edit
-		set_project
-	end
+  def edit
 
-	def update
-		set_project
-		edit_project
-	end
+  end
 
-	def set_project
-		if Project.exists?(params[:id])
-			@project = Project.find(params[:id])
-		else
-			flash[:danger] = "project does not exists"
-      		redirect_to projects_path()
-		end
-	end
+  def set_project
+    if Project.exists?(params[:id])
+      @project = Project.find(params[:id])
+    else
+      flash[:danger] = "project does not exists"
+          redirect_to projects_path()
+    end
+  end
 
-	def edit_project
-		if @project.update(project_params)
-			
-			flash[:success] = "project was successfuly updated"
-			redirect_to root_path
-			
-		else
-			render 'index'
-		end	
-	end
+  def authorize_user!
+    authorize current_user 
+  end
 
-	private
-	def project_params
-		params.require(:project).permit(:title, :description,:user)
-	end
-
-	def save_project
-		if @project.save
-			if @project_user.save
-			flash[:success] = "project was successfuly created"
-			redirect_to root_path
-			end
-		else
-			render 'index'
-		end	
-	end
-
-	def delete_project		
-      	if	@project.destroy    		
-			flash[:success] = "project was successfuly deleted"
-			redirect_to projects_path()
-		end
-	end
-
-
-	
-	
-
-	
+  def project_params
+    params.require(:project).permit(:title, :description)
+  end
 end

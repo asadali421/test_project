@@ -4,8 +4,12 @@
 			<h1>Welcome To Testing App</h1>
 				<div align="center">
 					<br>
-					<h3> New User Need To Sign Up</h3>
-					<%= link_to '<button class="btn-lg btn-primary" type="button">Sign Up</button>'.html_safe, new_user_registration_path %>
+					<% if !signed_in? %>
+						<h3> New User Need To Sign Up</h3>
+						<%= link_to '<button class="btn-lg btn-primary" type="button">Sign Up</button>'.html_safe, new_user_registration_path %>
+					<% else %>
+						<h3> Logged in as: <%= current_user.user_type%></h3>
+					<% end %>
 				</div>
 		</div>
 	</div>

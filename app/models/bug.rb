@@ -2,7 +2,9 @@ class Bug < ActiveRecord::Base
 
 mount_uploader :image_path, ImageUploader
 
-	belongs_to :project
+	belongs_to :projects
+  belongs_to :creator ,class_name: "User", foreign_key: :created_by
+    belongs_to :solver ,class_name: "User", foreign_key: :solved_by, optional: true
 	validates :title, presence: true,
   			length: { minimum: 3, maximum: 25 }
 

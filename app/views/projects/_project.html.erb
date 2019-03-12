@@ -11,15 +11,13 @@
 <%= link_to project.title, project_path(project) %>
 
 </div>
-<% project.users.each do |manager| %>
-	<% if manager.user_type =="Manager"%>
 <div class="project-body">
 
 <%= truncate(project.description, length: 100) %>
 	
 <div class="project-meta-data">
 <small>
-	Created By: <%=manager.name  %>,
+	Created By: <%=project.manager.name  %>,
 	<%= time_ago_in_words(project.created_at) %>
 	last updated: <%= time_ago_in_words(project.updated_at) %> ago
 	
@@ -27,7 +25,7 @@
 </small>
 </div>
 </div>
-<% if signed_in? && current_user == manager %>
+<% if signed_in? && current_user.user_type == "Manager" %>
 <div class="project-actions">
 
 <%= link_to "Add developer",  new_project_project_user_path(project.id), class: "btn btn-xs btn-success" %>
@@ -43,8 +41,6 @@ class: "btn btn-xs btn-danger" %>
 
 
 </div>
-<% end %>
-<% end %>
 <% end %>
 </div>
 

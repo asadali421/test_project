@@ -1,0 +1,51 @@
+<% bugs.each do |bug| %>
+ <div class="row" >
+  <div class="col-xs-8 col-xs-offset-2">
+    <div class="well well-lg" align="center">
+      <% if  bug.image_path.url!=nil %>
+       <%= image_tag bug.image_path.url ,size: 100%>
+      <% end %>
+    <div class="project-title">
+     <%= bug.title %>
+    </div>
+
+    <div class="project-body">
+     <%= truncate(bug.description, length: 100) %>
+    </div>
+    
+    <div class="project-meta-data">
+     <small>
+         Created By: <%= bug.creator.name  %>,
+         <%= time_ago_in_words(bug.created_at) %> ago, 
+         last updated: <%= time_ago_in_words(bug.updated_at) %> ago
+     
+     </small>
+    
+      <% if bug.status != "New"%>
+        <br>
+          <small>
+               <%=bug.status %> By: <%= bug.solver.name %>
+          </small>
+      <% end %>
+    </div>
+
+    <% if signed_in? && current_user.id == bug.created_by  %>
+      <div class="project-actions">
+        <%= link_to "Edit this Bug", edit_project_bug_path(bug.project_id,bug.id), class: "btn btn-xs btn-primary" %>
+        <%= link_to "Delete this Bug", project_bug_path(bug.project_id,bug.id), method: :delete,
+        data: { confirm: "Are you sure you want to delete the article?"},
+        class: "btn btn-xs btn-danger" %>
+        
+        <%elsif signed_in? && current_user.user_type == "Developer"%>
+          <%= link_to "Resolve this Bug", edit_project_bug_path(bug.project_id,bug.id), class: "btn btn-xs btn-primary" %>
+            
+       </div>
+     <% end %>
+   </div>
+ </div>
+</div>
+<% end %>
+
+
+
+
