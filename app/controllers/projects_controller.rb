@@ -15,6 +15,7 @@ class ProjectsController < ApplicationController
   end
 
   def create
+    byebug
       @project = current_user.managed_projects.new(project_params)
     if @project.save
       flash[:success] = "project was successfuly created"
