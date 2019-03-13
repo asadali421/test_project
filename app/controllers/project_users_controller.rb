@@ -7,11 +7,12 @@ class ProjectUsersController < ApplicationController
   end
 
   def create
-    @project_user = ProjectUser.new(developer_params)
-    @project_user.project_id = @project.id
-    if !ProjectUser.find_by(user_id:@project_user.user_id, project_id: @project_user.project_id)
-      flash[:success] = "Developer added successfully"
+    @developer = User.find(params[:project_user][:user_id].to_i) 
+    if !@developer.projects.include?(@project)
+      @project_user = ProjectUser.new(developer_params)
+      @project_user.project = @project
       @project_user.save
+      flash[:success] = "Developer added successfully"
       redirect_to projects_path()
     else
       flash[:success] = "Developer Already exists"
