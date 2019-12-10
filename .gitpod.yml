@@ -12,7 +12,7 @@ tasks:
       echo DATABASE_URL=$DATABASE_URL >> .env &&
       echo ROCKET_ADDRESS=$ROCKET_ADDRESS >> .env &&
       echo ROCKET_PORT=$ROCKET_PORT >> .env &&
-      pg_start.sh &&
+      rails s &&
       diesel setup &&
       cargo build &&
       cargo run
